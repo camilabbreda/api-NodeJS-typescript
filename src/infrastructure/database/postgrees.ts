@@ -1,7 +1,5 @@
 import { Pool, QueryResult } from 'pg';
 
-console.log(process.env.PG_HOST, process.env.PG_DATABASE, `${process.env.PG_USER}`,`${process.env.PG_PASSWORD}` );
-
 const pool = new Pool({
   host: process.env.PG_HOST,
   port: parseInt(`${process.env.PG_PORT}`),

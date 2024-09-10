@@ -16,13 +16,22 @@ export default class RepositoryPG {
     const user: Array<iUser> = await ModelPG.query(sql, values);
     return user[0];
   }
-  static async getUserById(data: iUser):Promise<iUser>{
-    const sql = 'select * from user where id = $1;';
-    const values = [
-      data.id
-    ];
-    const response:Array<iUser> = await ModelPG.query(sql, values);
+  static async getUserById(data: iUser): Promise<iUser> {
+    const sql = 'select * from "user" where id = $1;';
+    const values = [data.id];
+    const response: Array<iUser> = await ModelPG.query(sql, values);
+    return response[0];
+  }
+  static async getUserByUsername(username: string) {
+    const sql = 'select * from "user" where username = $1;';
+    const values = [username];
+    const response: Array<iUser> = await ModelPG.query(sql, values);
+    return response[0];
+  }
+  static async getUserByEmail(email: string) {
+    const sql = 'select * from "user" where email = $1;';
+    const values = [email];
+    const response: Array<iUser> = await ModelPG.query(sql, values);
     return response[0];
   }
 }
-

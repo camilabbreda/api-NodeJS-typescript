@@ -3,26 +3,25 @@ import { v4 as uuidv4 } from 'uuid';
 import RepositoryPG from '../repository/repository-pg-user';
 import { AppException } from '../../common/error/app-exception';
 import { BadRequestException } from '../../common/error/bad-request-esception';
+import validation, {
+  emailValidation,
+  userNameValidation,
+} from '../../common/util/function/validation';
+import dataFormatting from '../../common/util/function/data-formatting';
 
 export default class ServicePG {
   static async createUser(body: iUser): Promise<iUser> {
-    if (
-      !body.username ||
-      !body.firstname ||
-      !body.lastname ||
-      !body.email ||
-      !body.password
-    ) {
-      throw new BadRequestException(
-        'Please, inform all data from user (username, firstname, lastname, email, password )'
-      );
-    }
-    body.id = uuidv4();
-    body.password = Buffer.from(`${body.password}`, 'utf8').toString('base64');
-    const user: iUser | null = await RepositoryPG.createUser(body);
+    await validation(body);
+    
+    const data: iUser = dataFormatting(body);
+    data.id = uuidv4();
+    data.password = Buffer.from(`${data.password}`, 'utf8').toString('base64');
+    const user = await RepositoryPG.createUser(data);
+
     if (!user) {
       throw new AppException('Ocorreu um erro ao registrar usuário.', 500);
     }
+    
     user.password = 'secret';
     return user;
   }
