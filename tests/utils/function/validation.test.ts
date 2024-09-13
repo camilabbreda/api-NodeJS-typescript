@@ -55,8 +55,8 @@ describe('validation', () => {
   });
 
   it('should throw BadRequestException if username is already registered', async () => {
-    (RepositoryPG.getUserByUsername as jest.Mock).mockResolvedValueOnce(validUser);
-    (RepositoryPG.getUserByEmail as jest.Mock).mockResolvedValueOnce(undefined);
+    (RepositoryPG.getUserByUsername as jest.Mock).mockResolvedValue(validUser);
+    (RepositoryPG.getUserByEmail as jest.Mock).mockResolvedValue(undefined);
     await expect(validation(validUser)).rejects.toThrow(
       new BadRequestException(
         `Sorry, the username ${validUser.username} is already registered.`
@@ -64,19 +64,19 @@ describe('validation', () => {
     );
   });
 
-  // it('should throw BadRequestException if email is already registered', async () => {
-  //   (RepositoryPG.getUserByUsername as jest.Mock).mockResolvedValue(undefined);
-  //   (RepositoryPG.getUserByEmail as jest.Mock).mockResolvedValue(validUser);
+  it('should throw BadRequestException if email is already registered', async () => {
+    (RepositoryPG.getUserByUsername as jest.Mock).mockResolvedValue(undefined);
+    (RepositoryPG.getUserByEmail as jest.Mock).mockResolvedValue(validUser);
   
-  //   const result = await RepositoryPG.getUserByEmail(`${validUser.email}`);
-  //   expect(result).toBe(validUser); 
+    const result = await RepositoryPG.getUserByEmail(`${validUser.email}`);
+    expect(result).toBe(validUser); 
   
-  //   await expect(validation(validUser)).rejects.toThrow(
-  //     new BadRequestException(
-  //       `Sorry, the email ${validUser.email} is already registered.`
-  //     )
-  //   );
-  // });
+    await expect(validation(validUser)).rejects.toThrow(
+      new BadRequestException(
+        `Sorry, the email ${validUser.email} is already registered.`
+      )
+    );
+  });
 
   it('should not throw any exception if the user data is valid', async () => {
     (RepositoryPG.getUserByUsername as jest.Mock).mockResolvedValue(
