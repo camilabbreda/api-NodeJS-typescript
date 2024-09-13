@@ -23,8 +23,6 @@ describe('validation', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (RepositoryPG.getUserByUsername as jest.Mock).mockResolvedValue(undefined);
-    (RepositoryPG.getUserByEmail as jest.Mock).mockResolvedValue(validUser);
   });
 
   it('should throw BadRequestException if any required fields are missing', async () => {
@@ -87,7 +85,7 @@ describe('validation', () => {
   });
 });
 
-describe.skip('isJsonValid', () => {
+describe('isJsonValid', () => {
   it('should return true for valid JSON strings', () => {
     const validJson = '{"name":"John", "age":30}';
     expect(isJsonValid(validJson)).toBe(true);
@@ -99,7 +97,7 @@ describe.skip('isJsonValid', () => {
   });
 });
 
-describe.skip('userNameValidation', () => {
+describe('userNameValidation', () => {
   it('should return false if the username contains spaces', () => {
     expect(usernameValidation('invalid user')).toBe(false);
   });
@@ -113,7 +111,7 @@ describe.skip('userNameValidation', () => {
   });
 });
 
-describe.skip('emailValidation', () => {
+describe('emailValidation', () => {
   it('should return false for invalid email formats', () => {
     expect(emailValidation('invalidemail')).toBe(false);
     expect(emailValidation('invalid@domain')).toBe(false);
