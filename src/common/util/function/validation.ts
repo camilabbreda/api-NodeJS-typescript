@@ -15,10 +15,10 @@ export default async function validation(body:iUser){
     );
   }
 
-  const isValidUsername = userNameValidation(body.username);
+  const isValidUsername = usernameValidation(body.username);
   if(!isValidUsername){
     throw new BadRequestException(
-      "Please, username should not have any blank spaces or camelcase."
+      'Please, username should not have any blank spaces or camelcase.'
     );
   }
   const isEmailValid = emailValidation(body.email.toLocaleLowerCase())
@@ -36,7 +36,8 @@ export default async function validation(body:iUser){
     );
   }
 
-  const existEmail = await RepositoryPG.getUserByEmail(body.email)
+  const existEmail = await RepositoryPG.getUserByEmail(body.email);
+  console.log('existEmail', existEmail);
   if(existEmail){
     throw new BadRequestException(
       `Sorry, the email ${body.email} is already registered.`
@@ -53,7 +54,7 @@ export function isJsonValid(jsonstring: string): boolean {
   }
 }
 
-export function userNameValidation(username: string):boolean {
+export function usernameValidation(username: string):boolean {
   const includesSpace = username.includes(' ');
   const includesCamelCase = /[A-Z]/.test(username)
   if (includesSpace || includesCamelCase) {
