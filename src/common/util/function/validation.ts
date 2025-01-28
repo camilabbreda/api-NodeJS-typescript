@@ -2,7 +2,7 @@ import RepositoryPG from '../../../domain/repository/repository-pg-user';
 import { BadRequestException } from '../../error/bad-request-esception';
 import { iUser } from '../../interface/entity-pg-user';
 
-export default async function validation(body:iUser){
+export default async function validation(body: iUser) {
   if (
     !body.username ||
     !body.firstname ||
@@ -16,29 +16,28 @@ export default async function validation(body:iUser){
   }
 
   const isValidUsername = usernameValidation(body.username);
-  if(!isValidUsername){
+  if (!isValidUsername) {
     throw new BadRequestException(
       'Please, username should not have any blank spaces or camelcase.'
     );
   }
-  const isEmailValid = emailValidation(body.email.toLocaleLowerCase())
+  const isEmailValid = emailValidation(body.email.toLocaleLowerCase());
 
-  if(!isEmailValid){
+  if (!isEmailValid) {
     throw new BadRequestException(
       `Sorry, the email ${body.email} is not valid.`
     );
   }
 
-  const existUsername = await RepositoryPG.getUserByUsername(body.username);
-  if (existUsername) {
+  const isRegisteredUsername = await RepositoryPG.getUserByUsername(body.username);
+  if (isRegisteredUsername) {
     throw new BadRequestException(
       `Sorry, the username ${body.username} is already registered.`
     );
   }
 
-  const existEmail = await RepositoryPG.getUserByEmail(body.email);
-  console.log('existEmail', existEmail);
-  if(existEmail){
+  const isRegisteredEmail = await RepositoryPG.getUserByEmail(body.email);
+  if (isRegisteredEmail) {
     throw new BadRequestException(
       `Sorry, the email ${body.email} is already registered.`
     );
@@ -54,17 +53,17 @@ export function isJsonValid(jsonstring: string): boolean {
   }
 }
 
-export function usernameValidation(username: string):boolean {
+function usernameValidation(username: string): boolean {
   const includesSpace = username.includes(' ');
-  const includesCamelCase = /[A-Z]/.test(username)
+  const includesCamelCase = /[A-Z]/.test(username);
   if (includesSpace || includesCamelCase) {
-   return false;
+    return false;
   }
 
   return true;
 }
 
-export function emailValidation(email: string): boolean {
+function emailValidation(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
