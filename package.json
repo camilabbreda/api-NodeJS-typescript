@@ -7,7 +7,7 @@
     "dev": "nodemon --exec ts-node src/server.ts",
     "lint": "eslint ./ --ext js, jsx, ts, tsx",
     "build": "sucrase ./src -d ./dist --transforms typescript,imports",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "keywords": [],
   "author": "",

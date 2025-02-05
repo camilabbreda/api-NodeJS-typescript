@@ -10,9 +10,34 @@ export default class ControllerPG {
     res: Response
   ): Promise<ReturnResponse | ReturnError> {
     try {
-      const  body: iUser = req.body;
+      const body: iUser = req.body;
       const response: iUser = await ServicePG.createUser(body);
       return new ReturnResponse(res, 201, 'Success', response);
+    } catch (error: any) {
+      return new ReturnError(res, error);
+    }
+  }
+  static async deleteUser(
+    req: Request,
+    res: Response
+  ): Promise<ReturnResponse | ReturnError> {
+    const { id } = req.params;
+    try {
+      const response = await ServicePG.deleteUser(id);
+      return new ReturnResponse(res, 200, 'Success', response);
+    } catch (error: any) {
+      return new ReturnError(res, error);
+    }
+  }
+  static async updateUser(
+    req: Request,
+    res: Response
+  ): Promise<ReturnResponse | ReturnError> {
+    const { id } = req.params;
+    const body: iUser = req.body;
+    try {
+      await ServicePG.updateUser(id, body);
+      return new ReturnResponse(res, 204, 'Success', undefined);
     } catch (error: any) {
       return new ReturnError(res, error);
     }
