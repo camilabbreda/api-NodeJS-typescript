@@ -53,7 +53,6 @@ describe('Should test the PUT app routes', () => {
     ['password', { password: '123@sjsld#' }],
   ])('Sould update column %s', async (key, param) => {
     await request(app).put(`/register/${id}`).send(param).expect(204);
-    // expect(request).toHaveBeenCalled();
   });
 });
 
