@@ -27,7 +27,7 @@ describe('validation', () => {
 
   it('should throw BadRequestException if any required fields are missing', async () => {
     const invalidUser = { ...validUser, username: '' };
-    await expect(validation(invalidUser)).rejects.toThrow(
+    await expect(validation(invalidUser, 'POST')).rejects.toThrow(
       new BadRequestException(
         'Please, inform all data from user (username, firstname, lastname, email, password )'
       )
@@ -36,7 +36,7 @@ describe('validation', () => {
 
   it('should throw BadRequestException if username is invalid', async () => {
     const invalidUser = { ...validUser, username: 'invalid User' };
-    await expect(validation(invalidUser)).rejects.toThrow(
+    await expect(validation(invalidUser, 'POST')).rejects.toThrow(
       new BadRequestException(
         'Please, username should not have any blank spaces or camelcase.'
       )
@@ -45,7 +45,7 @@ describe('validation', () => {
 
   it('should throw BadRequestException if email is invalid', async () => {
     const invalidUser = { ...validUser, email: 'invalidemail' };
-    await expect(validation(invalidUser)).rejects.toThrow(
+    await expect(validation(invalidUser, 'POST')).rejects.toThrow(
       new BadRequestException(
         `Sorry, the email ${invalidUser.email} is not valid.`
       )
@@ -55,7 +55,7 @@ describe('validation', () => {
   it('should throw BadRequestException if username is already registered', async () => {
     (RepositoryPG.getUserByUsername as jest.Mock).mockResolvedValue(validUser);
     (RepositoryPG.getUserByEmail as jest.Mock).mockResolvedValue(undefined);
-    await expect(validation(validUser)).rejects.toThrow(
+    await expect(validation(validUser, 'POST')).rejects.toThrow(
       new BadRequestException(
         `Sorry, the username ${validUser.username} is already registered.`
       )
@@ -69,7 +69,7 @@ describe('validation', () => {
     const result = await RepositoryPG.getUserByEmail(`${validUser.email}`);
     expect(result).toBe(validUser); 
   
-    await expect(validation(validUser)).rejects.toThrow(
+    await expect(validation(validUser, 'POST')).rejects.toThrow(
       new BadRequestException(
         `Sorry, the email ${validUser.email} is already registered.`
       )
@@ -81,7 +81,7 @@ describe('validation', () => {
       undefined
     );
     (RepositoryPG.getUserByEmail as jest.Mock).mockResolvedValue(undefined);
-    await expect(validation(validUser)).resolves.not.toThrow();
+    await expect(validation(validUser, 'POST')).resolves.not.toThrow();
   });
 });
 
