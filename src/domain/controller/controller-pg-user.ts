@@ -34,7 +34,7 @@ export default class ControllerPG {
   ): Promise<ReturnResponse | ReturnError> {
     try {
       const { id } = req.params;
-      const response: iUser[] = await ServicePG.getUserById(id);
+      const response: iUser = await ServicePG.getUserById(id);
       return new ReturnResponse(res, 200, 'Success', response);
     } catch (error: any) {
       return new ReturnError(res, error);

@@ -29,7 +29,7 @@ describe('Should test the POST app routes', () => {
 
   it('Sould test user register', async () => {
     const response = await request(app)
-      .post('/register')
+      .post('/user/register')
       .send(data)
       .expect('Content-Type', /json/)
       .expect(201);
@@ -46,7 +46,7 @@ describe('Should test the POST app routes', () => {
   
   it('Sould test user login', async () => {
     const response = await request(app)
-      .post('/login')
+      .post('/user/login')
       .send(data)
       .expect('Content-Type', /json/)
       .expect(200);
@@ -66,7 +66,7 @@ describe('Should test the PUT app routes', () => {
     ['password', { password: '123@sjsld#' }],
   ])('Sould update column %s', async (key, param) => {
     await request(app)
-      .put(`/register/${id}`)
+      .put(`/user/register/${id}`)
       .set('Authorization', `Bearer ${token}`)
       .send(param)
       .expect(204);
@@ -76,7 +76,7 @@ describe('Should test the PUT app routes', () => {
 describe('Should test the DELETE app routes', () => {
   it('Sould test user delete', async () => {
     const response = await request(app)
-      .delete(`/register/${id}`)
+      .delete(`/user/register/${id}`)
       .set('Authorization', `Bearer ${token}`)
       .expect(200);
     expect(response.body.response).toBe('User was successfully deleted.');
