@@ -17,6 +17,29 @@ export default class ControllerPG {
       return new ReturnError(res, error);
     }
   }
+  static async getAllUsers(
+    _: Request,
+    res: Response
+  ): Promise<ReturnResponse | ReturnError> {
+    try {
+      const response: iUser[] = await ServicePG.getAllUsers();
+      return new ReturnResponse(res, 200, 'Success', response);
+    } catch (error: any) {
+      return new ReturnError(res, error);
+    }
+  }
+  static async getUserById(
+    req: Request,
+    res: Response
+  ): Promise<ReturnResponse | ReturnError> {
+    try {
+      const { id } = req.params;
+      const response: iUser[] = await ServicePG.getUserById(id);
+      return new ReturnResponse(res, 200, 'Success', response);
+    } catch (error: any) {
+      return new ReturnError(res, error);
+    }
+  }
   static async deleteUser(
     req: Request,
     res: Response
