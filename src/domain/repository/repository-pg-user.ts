@@ -5,7 +5,7 @@ import ModelPG from '../../infrastructure/database/postgrees';
 export default class RepositoryPG extends ModelPG {
   static async createUser(data: iUser): Promise<iUser> {
     const sql = `insert into "user" (id, username, firstname, lastname, email, password) 
-    values ($1, $2, $3, $4, $5, $6 ) RETURNING *;`;
+    values ($1, $2, $3, $4, $5, $6 ) RETURNING *`;
     const values = [
       data.id,
       data.username,
@@ -23,7 +23,7 @@ export default class RepositoryPG extends ModelPG {
     }
   }
   static async getUserById(data: iUser): Promise<iUser> {
-    const sql = 'select * from "user" where id = $1;';
+    const sql = 'select * from "user" where id = $1';
     const values = [data.id];
     const modelPG = new ModelPG();
     try {
@@ -35,7 +35,7 @@ export default class RepositoryPG extends ModelPG {
   }
 
   static async getUserByUsername(username: string) {
-    const sql = 'select * from "user" where username = $1;';
+    const sql = 'select * from "user" where username = $1';
     const values = [username];
     const modelPG = new ModelPG();
     try {
@@ -46,7 +46,7 @@ export default class RepositoryPG extends ModelPG {
     }
   }
   static async getUserByEmail(email: string) {
-    const sql = 'select * from "user" where email = $1;';
+    const sql = 'select * from "user" where email = $1';
     const values = [email];
     const modelPG = new ModelPG();
     try {
@@ -57,7 +57,7 @@ export default class RepositoryPG extends ModelPG {
     }
   }
   static async deleteUser(id: string) {
-    const sql = 'delete from "user" where id = $1;';
+    const sql = 'delete from "user" where id = $1';
     const values = [id];
     const modelPG = new ModelPG();
     try {
