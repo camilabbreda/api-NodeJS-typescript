@@ -33,6 +33,16 @@ export default class RepositoryPG extends ModelPG {
       modelPG.close();
     }
   }
+  static async getAllUsers(): Promise<Array<iUser>> {
+    const sql = 'select * from "user"';
+    const modelPG = new ModelPG();
+    try {
+      const response: Array<iUser> = await modelPG.query(sql);
+      return response;
+    } finally {
+      modelPG.close();
+    }
+  }
 
   static async getUserByUsername(username: string) {
     const sql = 'select * from "user" where username = $1';

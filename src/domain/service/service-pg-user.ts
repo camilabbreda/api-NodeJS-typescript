@@ -3,7 +3,11 @@ import RepositoryPG from '../repository/repository-pg-user';
 import { AppException } from '../../common/error/app-exception';
 import { NotFoundException } from '../../common/error/not-found-exception';
 import { iUser } from '../../common/interface/entity-pg-user';
-import { comparePassword, generateToken, hashPassword } from '../../common/util/auth/auth';
+import {
+  comparePassword,
+  generateToken,
+  hashPassword,
+} from '../../common/util/auth/auth';
 import validation from '../../common/util/function/validation';
 import dataFormatting from '../../common/util/function/data-formatting';
 
@@ -40,13 +44,27 @@ export default class ServicePG {
     await RepositoryPG.updateUser(id, data);
     return 'User was successfully updated.';
   }
+  static async getAllUsers() {
+    const response = await RepositoryPG.getAllUsers();
+    if (!response || response.length === 0) {
+      new NotFoundException('There is no user registered yet.');
+    }
+    return response;
+  }
+  static async getUserById(id: string) {
+    const response = await RepositoryPG.getUserById({ id });
+    if (!response) {
+      new NotFoundException('User not found.');
+    }
+    return response;
+  }
 
   static async loginUser(username: string, password: string) {
     const user = await RepositoryPG.getUserByUsername(username);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-  
+
     const isMatch = await comparePassword(password, user.password as string);
     if (!isMatch) {
       throw new AppException('Invalid credentials', 401);
@@ -55,5 +73,4 @@ export default class ServicePG {
     const token = generateToken(user);
     return { token };
   }
-  
 }
