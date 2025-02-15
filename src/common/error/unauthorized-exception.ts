@@ -1,7 +1,7 @@
 import { AppException } from './app-exception';
 
 export class UnauthorizedException extends AppException {
-  constructor() {
-    super('Unauthorized', 401);
+  constructor(message: string) {
+    super(message??'Unauthorized', 401);
   }
 }

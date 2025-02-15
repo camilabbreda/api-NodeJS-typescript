@@ -1,7 +1,9 @@
-import { iUser } from '../../common/interface/entity-pg-user';
 import { v4 as uuidv4 } from 'uuid';
 import RepositoryPG from '../repository/repository-pg-user';
 import { AppException } from '../../common/error/app-exception';
+import { NotFoundException } from '../../common/error/not-found-exception';
+import { iUser } from '../../common/interface/entity-pg-user';
+import { comparePassword, generateToken, hashPassword } from '../../common/util/auth/auth';
 import validation from '../../common/util/function/validation';
 import dataFormatting from '../../common/util/function/data-formatting';
 
@@ -11,7 +13,7 @@ export default class ServicePG {
 
     const data: iUser = dataFormatting(body);
     data.id = uuidv4();
-    data.password = Buffer.from(`${data.password}`, 'utf8').toString('base64');
+    data.password = await hashPassword(data.password as string);
     const user = await RepositoryPG.createUser(data);
 
     if (!user) {
@@ -38,4 +40,20 @@ export default class ServicePG {
     await RepositoryPG.updateUser(id, data);
     return 'User was successfully updated.';
   }
+
+  static async loginUser(username: string, password: string) {
+    const user = await RepositoryPG.getUserByUsername(username);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+  
+    const isMatch = await comparePassword(password, user.password as string);
+    if (!isMatch) {
+      throw new AppException('Invalid credentials', 401);
+    }
+    delete user.password;
+    const token = generateToken(user);
+    return { token };
+  }
+  
 }

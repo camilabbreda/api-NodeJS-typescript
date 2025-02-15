@@ -42,4 +42,16 @@ export default class ControllerPG {
       return new ReturnError(res, error);
     }
   }
+  static async loginUser(
+    req: Request,
+    res: Response
+  ): Promise<ReturnResponse | ReturnError> {
+    try {
+      const { username, password } = req.body;
+      const response = await ServicePG.loginUser(username, password);
+      return new ReturnResponse(res, 200, 'Success', response);
+    } catch (error: any) {
+      return new ReturnError(res, error);
+    }
+  }
 }
